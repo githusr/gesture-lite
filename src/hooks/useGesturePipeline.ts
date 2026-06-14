@@ -53,12 +53,12 @@ interface PipelineRefs {
 /**
  * Orchestrates the full camera -> detect -> crop -> classify -> smooth loop.
  *
- * Three concerns are deliberately decoupled into separate effects so changing,
- * say, the camera does not reload the ONNX model:
- *   - model effect    (deps: executionProvider) owns the worker + classifier
- *   - pipeline effect (deps: facingMode, detectionConfidence) owns camera +
- *     landmarker + the requestAnimationFrame loop
- *   - live effect     mirrors fast-changing settings into refs the loop reads
+ * Concerns are deliberately decoupled into separate effects so changing, say,
+ * the camera does not reload the ONNX model:
+ *   - model effect   owns the worker + ONNX classifier (rebuilt only on retry)
+ *   - camera effect  (deps: facingMode) owns camera + landmarker + the rAF loop
+ *   - live effects   apply fast-changing settings without tearing anything down
+ *     (smoothing into refs; detection sensitivity via HandLandmarker.setOptions)
  */
 export function useGesturePipeline(
   { videoRef, overlayRef }: PipelineRefs,
@@ -201,7 +201,7 @@ export function useGesturePipeline(
       extractorRef.current = new RoiExtractor(cfg.inputSize)
 
       try {
-        await classifier.init(paths.model(), cfg, [settings.executionProvider])
+        await classifier.init(paths.model(), cfg)
         if (cancelled) return
         modelReadyRef.current = true
         setModelStatus('ready')
@@ -220,7 +220,21 @@ export function useGesturePipeline(
       classifierRef.current = null
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings.executionProvider, retryTick])
+  }, [retryTick])
+
+  // --- live detection-sensitivity update (no landmarker re-creation) ---
+  useEffect(() => {
+    const landmarker = landmarkerRef.current
+    if (!landmarker) return
+    const conf = settings.detectionConfidence
+    void landmarker
+      .setOptions({
+        minHandDetectionConfidence: conf,
+        minHandPresenceConfidence: conf,
+        minTrackingConfidence: conf,
+      })
+      .catch((err) => console.warn('[gesture-lite] setOptions failed:', err))
+  }, [settings.detectionConfidence])
 
   // --- camera + landmarker + loop effect ---
   useEffect(() => {
@@ -241,7 +255,7 @@ export function useGesturePipeline(
         }
         landmarker = await createHandLandmarker({
           numHands: 1,
-          minDetectionConfidence: settings.detectionConfidence,
+          minDetectionConfidence: liveRef.current.detectionConfidence,
         })
         if (cancelled) {
           landmarker.close()
@@ -297,7 +311,7 @@ export function useGesturePipeline(
       setResult(EMPTY_RESULT)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings.facingMode, settings.detectionConfidence, retryTick, loop])
+  }, [settings.facingMode, retryTick, loop])
 
   const retry = useCallback(() => setRetryTick((t) => t + 1), [])
 

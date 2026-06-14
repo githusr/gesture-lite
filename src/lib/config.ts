@@ -1,4 +1,4 @@
-import type { ExecutionProvider, ModelConfig } from './types'
+import type { ModelConfig } from './types'
 
 /**
  * Default preprocessing assumptions (ImageNet-style normalisation, 224×224,
@@ -44,7 +44,6 @@ export const paths = {
 
 export interface Settings {
   facingMode: 'user' | 'environment'
-  executionProvider: ExecutionProvider
   /** MediaPipe minimum hand-detection confidence. */
   detectionConfidence: number
   /** Number of recent inferences averaged for smoothing. */
@@ -59,7 +58,6 @@ export interface Settings {
 
 export const DEFAULT_SETTINGS: Settings = {
   facingMode: 'user',
-  executionProvider: 'wasm',
   detectionConfidence: 0.5,
   smoothingWindow: 8,
   scoreThreshold: 0.55,

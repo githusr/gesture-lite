@@ -137,8 +137,8 @@ The build uses a **relative base** (`base: './'`), so it also works from a
 sub-path (e.g. `https://user.github.io/repo/`) with no configuration.
 
 > The onnxruntime-web WASM binary is ~26 MB (~6 MB gzipped). It is cached after
-> the first load. Choose the **WASM** backend (default) for maximum compatibility,
-> or **WebGPU** in Settings for a speed-up on supported browsers.
+> the first load. Inference runs single-threaded on the WASM backend for maximum
+> compatibility (no COOP/COEP headers required).
 
 ## Troubleshooting
 

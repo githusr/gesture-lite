@@ -6,7 +6,6 @@ import type { Settings } from '../lib/config'
 interface Props {
   settings: Settings
   onChange: (patch: Partial<Settings>) => void
-  webgpuAvailable: boolean
 }
 
 function Segmented<T extends string>({
@@ -109,7 +108,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 
 /** Live tuning controls. Most changes apply instantly; camera/EP changes
  * transparently re-initialise the relevant subsystem. */
-export function SettingsPanel({ settings, onChange, webgpuAvailable }: Props) {
+export function SettingsPanel({ settings, onChange }: Props) {
   const { t } = useI18n()
   const [open, setOpen] = useState(true)
 
@@ -141,19 +140,6 @@ export function SettingsPanel({ settings, onChange, webgpuAvailable }: Props) {
                 options={[
                   { value: 'user', label: t.front },
                   { value: 'environment', label: t.back },
-                ]}
-              />
-            </div>
-          </Row>
-
-          <Row label={t.backend}>
-            <div className="w-40">
-              <Segmented
-                value={settings.executionProvider}
-                onChange={(v) => onChange({ executionProvider: v })}
-                options={[
-                  { value: 'wasm', label: 'WASM' },
-                  { value: 'webgpu', label: 'WebGPU', disabled: !webgpuAvailable },
                 ]}
               />
             </div>

@@ -24,7 +24,6 @@ export interface Messages {
   settings: string
   front: string
   back: string
-  backend: string
   mirror: string
   showLandmarks: string
   detectionSensitivity: string
@@ -59,13 +58,13 @@ const zh: Messages = {
   settings: '设置',
   front: '前置',
   back: '后置',
-  backend: '推理后端',
   mirror: '镜像画面',
   showLandmarks: '显示手部关键点',
   detectionSensitivity: '检测灵敏度',
   smoothingWindow: '平滑窗口（帧）',
   scoreThreshold: '置信度阈值',
-  settingsHint: '提示：更改“检测灵敏度”或“推理后端”会重新初始化对应模块，画面会短暂中断。',
+  settingsHint:
+    '提示：检测灵敏度、平滑与阈值均实时生效；切换前/后置摄像头会短暂重启画面。',
   requestingCamera: '正在请求摄像头权限…',
   alsoLoadingModel: '同时正在加载手势模型',
   cameraUnavailable: '摄像头无法使用',
@@ -107,14 +106,13 @@ const en: Messages = {
   settings: 'Settings',
   front: 'Front',
   back: 'Back',
-  backend: 'Backend',
   mirror: 'Mirror',
   showLandmarks: 'Show landmarks',
   detectionSensitivity: 'Detection sensitivity',
   smoothingWindow: 'Smoothing window (frames)',
   scoreThreshold: 'Confidence threshold',
   settingsHint:
-    'Tip: changing detection sensitivity or backend re-initialises that subsystem, so the feed pauses briefly.',
+    'Tip: detection sensitivity, smoothing and threshold apply live; switching the front/back camera briefly restarts the feed.',
   requestingCamera: 'Requesting camera permission…',
   alsoLoadingModel: 'Loading the gesture model too',
   cameraUnavailable: 'Camera unavailable',

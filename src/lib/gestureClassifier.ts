@@ -1,10 +1,4 @@
-import type {
-  ExecutionProvider,
-  ModelConfig,
-  RGBAImage,
-  WorkerRequest,
-  WorkerResponse,
-} from './types'
+import type { ModelConfig, RGBAImage, WorkerRequest, WorkerResponse } from './types'
 
 /**
  * Main-thread facade over {@link inference.worker}. Presents a small async API
@@ -37,12 +31,8 @@ export class GestureClassifier {
   }
 
   /** Load the model + preprocessing config. Resolves once the session is ready. */
-  init(
-    modelUrl: string,
-    config: ModelConfig,
-    executionProviders: ExecutionProvider[],
-  ): Promise<void> {
-    const req: WorkerRequest = { type: 'init', modelUrl, config, executionProviders }
+  init(modelUrl: string, config: ModelConfig): Promise<void> {
+    const req: WorkerRequest = { type: 'init', modelUrl, config }
     return new Promise((resolve, reject) => {
       this.readyResolve = resolve
       this.readyReject = reject

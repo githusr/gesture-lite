@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { CameraView } from './components/CameraView'
 import { ResultPanel } from './components/ResultPanel'
 import { SettingsPanel } from './components/SettingsPanel'
@@ -25,7 +25,6 @@ export default function App() {
 
   const { t, lang, setLang } = useI18n()
   const [settings, setSettings] = useState<Settings>(loadSettings)
-  const webgpuAvailable = useMemo(() => typeof navigator !== 'undefined' && 'gpu' in navigator, [])
 
   useEffect(() => {
     try {
@@ -81,11 +80,7 @@ export default function App() {
 
         <aside className="flex w-full flex-col gap-4 lg:w-[360px] lg:shrink-0">
           <ResultPanel state={state} />
-          <SettingsPanel
-            settings={settings}
-            onChange={updateSettings}
-            webgpuAvailable={webgpuAvailable}
-          />
+          <SettingsPanel settings={settings} onChange={updateSettings} />
         </aside>
       </main>
 

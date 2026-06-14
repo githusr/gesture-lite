@@ -32,7 +32,7 @@ async function init(msg: Extract<WorkerRequest, { type: 'init' }>): Promise<void
   ort.env.wasm.numThreads = 1
 
   session = await ort.InferenceSession.create(msg.modelUrl, {
-    executionProviders: msg.executionProviders,
+    executionProviders: ['wasm'],
     graphOptimizationLevel: 'all',
   })
 
@@ -76,7 +76,7 @@ ctx.onmessage = async (event: MessageEvent<WorkerRequest>) => {
     const message = err instanceof Error ? err.message : String(err)
     post({
       type: 'error',
-      phase: msg.type === 'init' ? 'init' : 'infer',
+      phase: msg.type === 'infer' ? 'infer' : 'init',
       message,
       id: msg.type === 'infer' ? msg.id : undefined,
     })

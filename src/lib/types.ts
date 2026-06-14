@@ -8,8 +8,6 @@ export type TensorLayout = 'nchw' | 'nhwc'
 /** Channel order the model expects. `mean`/`std` are interpreted in THIS order. */
 export type ChannelOrder = 'rgb' | 'bgr'
 
-export type ExecutionProvider = 'wasm' | 'webgpu'
-
 /**
  * Describes how to turn a cropped hand image into the tensor a specific gesture
  * model expects. Loaded at runtime from `public/models/model.config.json` so the
@@ -92,12 +90,7 @@ export type ModelErrorCode = 'not-loaded' | 'failed'
 // ---- Worker protocol ------------------------------------------------------
 
 export type WorkerRequest =
-  | {
-      type: 'init'
-      modelUrl: string
-      executionProviders: ExecutionProvider[]
-      config: ModelConfig
-    }
+  | { type: 'init'; modelUrl: string; config: ModelConfig }
   | { type: 'infer'; id: number; image: RGBAImage }
   | { type: 'dispose' }
 
