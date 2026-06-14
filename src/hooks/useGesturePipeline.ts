@@ -223,17 +223,24 @@ export function useGesturePipeline(
   }, [retryTick])
 
   // --- live detection-sensitivity update (no landmarker re-creation) ---
+  // setOptions() rebuilds the MediaPipe graph and is comparatively expensive, so
+  // debounce it: while the slider is being dragged the effect re-runs and the
+  // cleanup cancels the pending call, applying only once the value settles. The
+  // slider value itself still updates every frame, so dragging stays smooth.
   useEffect(() => {
     const landmarker = landmarkerRef.current
     if (!landmarker) return
     const conf = settings.detectionConfidence
-    void landmarker
-      .setOptions({
-        minHandDetectionConfidence: conf,
-        minHandPresenceConfidence: conf,
-        minTrackingConfidence: conf,
-      })
-      .catch((err) => console.warn('[gesture-lite] setOptions failed:', err))
+    const id = setTimeout(() => {
+      void landmarker
+        .setOptions({
+          minHandDetectionConfidence: conf,
+          minHandPresenceConfidence: conf,
+          minTrackingConfidence: conf,
+        })
+        .catch((err) => console.warn('[gesture-lite] setOptions failed:', err))
+    }, 200)
+    return () => clearTimeout(id)
   }, [settings.detectionConfidence])
 
   // --- camera + landmarker + loop effect ---
