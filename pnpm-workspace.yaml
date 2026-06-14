@@ -1,0 +1,5 @@
+# onnxruntime-web pulls in protobufjs, whose postinstall build script we don't
+# need (the published package works without it). Explicitly disallow it so
+# `pnpm install` stays clean and non-interactive.
+allowBuilds:
+  protobufjs: false

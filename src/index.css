@@ -1,0 +1,103 @@
+@import 'tailwindcss';
+
+/* ---- Design tokens (Tailwind v4 CSS-first config) ---------------------- */
+@theme {
+  --color-ink-950: #070a11;
+  --color-ink-900: #0b0f17;
+  --color-ink-850: #11161f;
+  --color-ink-800: #161c27;
+  --color-ink-700: #1f2735;
+  --color-ink-600: #2b3445;
+  --color-line: #283041;
+
+  --color-accent: #5ed4ff;
+  --color-accent-soft: #2a3340;
+  --color-good: #4ade80;
+  --color-warn: #fbbf24;
+  --color-bad: #fb7185;
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ---- Base ------------------------------------------------------------- */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-ink-900);
+  color: #e7ecf3;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* avoid pull-to-refresh / bounce hijacking the camera UI on mobile */
+  overscroll-behavior: none;
+}
+
+/*
+ * Decorative top glow pinned to the viewport (not the scrolling page). A
+ * fixed-size gradient painted on a tall mobile page fades out partway down and
+ * leaves a visible seam; anchoring it here keeps one continuous backdrop no
+ * matter the page height or scroll position.
+ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(120% 60% at 50% -10%, #131c2a 0%, transparent 70%);
+}
+
+/* The camera feed is mirrored for a natural "selfie" experience. */
+.mirror {
+  transform: scaleX(-1);
+}
+
+/* Thin range sliders that match the dark theme. */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--color-ink-600);
+  outline: none;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(94, 212, 255, 0.15);
+}
+input[type='range']::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 999px;
+  background: var(--color-accent);
+  cursor: pointer;
+}
+
+@keyframes pulse-ring {
+  0% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.55;
+  }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 1.4s ease-in-out infinite;
+}

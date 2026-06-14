@@ -1,0 +1,23 @@
+# dependencies
+node_modules
+.pnpm-store
+
+# build output
+dist
+dist-ssr
+
+# editor / OS
+.DS_Store
+*.local
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# user-supplied model weights (large binaries — keep out of git)
+public/models/*.onnx
+public/models/*.task
