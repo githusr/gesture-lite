@@ -17,7 +17,3 @@ dist-ssr
 *.log
 npm-debug.log*
 pnpm-debug.log*
-
-# user-supplied model weights (large binaries — keep out of git)
-public/models/*.onnx
-public/models/*.task

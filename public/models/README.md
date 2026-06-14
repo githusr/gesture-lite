@@ -10,8 +10,9 @@ fetched by the browser at runtime and used for fully local inference.
 | `model.config.json`    | optional | Preprocessing contract (see below). Falls back to ImageNet defaults.  |
 | `hand_landmarker.task` | ✅ yes   | MediaPipe Hand Landmarker model. Run `pnpm fetch:landmarker` to get it. |
 
-> `*.onnx` and `*.task` are git-ignored (large binaries). Commit `labels.json`
-> and `model.config.json` so the app's contract is version-controlled.
+> All four files are committed to the repo (the model is finalized), so a fresh
+> clone runs as-is. If you swap in a much larger / frequently-changing model,
+> consider Git LFS or ignoring the weights again to keep the history lean.
 
 ## `labels.json`
 

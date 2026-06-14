@@ -90,10 +90,12 @@ from `public/models/labels.json`.
   and its build script isn't needed). pnpm 11 reads settings from
   `pnpm-workspace.yaml`, not the `pnpm` field in `package.json`.
 
-## Model assets are user-supplied
+## Model assets
 
-`public/models/{gesture.onnx,hand_landmarker.task}` are **git-ignored** large
-binaries and won't exist on a fresh clone. The app handles their absence
-gracefully (camera + tracking still run; a friendly banner shows for a missing
-gesture model). `labels.json` and `model.config.json` are committed examples —
-keep them valid.
+`public/models/` holds the model assets — `gesture.onnx`, `hand_landmarker.task`,
+`labels.json` and `model.config.json` are all **committed** (the model is
+finalized), so a fresh clone runs as-is. The app still handles a missing/invalid
+gesture model gracefully (camera + tracking keep running; a friendly banner
+shows), so the no-model path must stay working. Keep `labels.json` index-aligned
+to the model's outputs. If a future model is large/frequently-changing, revisit
+Git LFS or re-ignoring the weights.
