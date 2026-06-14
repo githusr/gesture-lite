@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { cn } from '../lib/cn'
+import { useI18n } from '../lib/i18n'
 import type { Settings } from '../lib/config'
 
 interface Props {
@@ -109,6 +110,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 /** Live tuning controls. Most changes apply instantly; camera/EP changes
  * transparently re-initialise the relevant subsystem. */
 export function SettingsPanel({ settings, onChange, webgpuAvailable }: Props) {
+  const { t } = useI18n()
   const [open, setOpen] = useState(true)
 
   return (
@@ -117,7 +119,7 @@ export function SettingsPanel({ settings, onChange, webgpuAvailable }: Props) {
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between p-4"
       >
-        <h2 className="text-sm font-semibold text-white/80">设置</h2>
+        <h2 className="text-sm font-semibold text-white/80">{t.settings}</h2>
         <svg
           className={cn('h-4 w-4 text-white/40 transition-transform', open && 'rotate-180')}
           viewBox="0 0 24 24"
@@ -131,20 +133,20 @@ export function SettingsPanel({ settings, onChange, webgpuAvailable }: Props) {
 
       {open && (
         <div className="space-y-4 px-4 pb-4">
-          <Row label="摄像头">
+          <Row label={t.camera}>
             <div className="w-40">
               <Segmented
                 value={settings.facingMode}
                 onChange={(v) => onChange({ facingMode: v, mirror: v === 'user' })}
                 options={[
-                  { value: 'user', label: '前置' },
-                  { value: 'environment', label: '后置' },
+                  { value: 'user', label: t.front },
+                  { value: 'environment', label: t.back },
                 ]}
               />
             </div>
           </Row>
 
-          <Row label="推理后端">
+          <Row label={t.backend}>
             <div className="w-40">
               <Segmented
                 value={settings.executionProvider}
@@ -157,17 +159,17 @@ export function SettingsPanel({ settings, onChange, webgpuAvailable }: Props) {
             </div>
           </Row>
 
-          <Row label="镜像画面">
+          <Row label={t.mirror}>
             <Toggle checked={settings.mirror} onChange={(v) => onChange({ mirror: v })} />
           </Row>
 
-          <Row label="显示手部关键点">
+          <Row label={t.showLandmarks}>
             <Toggle checked={settings.showLandmarks} onChange={(v) => onChange({ showLandmarks: v })} />
           </Row>
 
           <div className="space-y-3 border-t border-line pt-4">
             <Slider
-              label="检测灵敏度"
+              label={t.detectionSensitivity}
               value={settings.detectionConfidence}
               min={0.1}
               max={0.9}
@@ -176,7 +178,7 @@ export function SettingsPanel({ settings, onChange, webgpuAvailable }: Props) {
               onChange={(v) => onChange({ detectionConfidence: v })}
             />
             <Slider
-              label="平滑窗口（帧）"
+              label={t.smoothingWindow}
               value={settings.smoothingWindow}
               min={1}
               max={30}
@@ -185,7 +187,7 @@ export function SettingsPanel({ settings, onChange, webgpuAvailable }: Props) {
               onChange={(v) => onChange({ smoothingWindow: v })}
             />
             <Slider
-              label="置信度阈值"
+              label={t.scoreThreshold}
               value={settings.scoreThreshold}
               min={0}
               max={0.95}
@@ -194,9 +196,7 @@ export function SettingsPanel({ settings, onChange, webgpuAvailable }: Props) {
               onChange={(v) => onChange({ scoreThreshold: v })}
             />
           </div>
-          <p className="text-xs leading-relaxed text-white/30">
-            提示：更改“检测灵敏度”或“推理后端”会重新初始化对应模块，画面会短暂中断。
-          </p>
+          <p className="text-xs leading-relaxed text-white/30">{t.settingsHint}</p>
         </div>
       )}
     </section>

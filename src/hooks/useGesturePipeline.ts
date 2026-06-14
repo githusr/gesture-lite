@@ -14,7 +14,13 @@ import {
 } from '../lib/handLandmarker'
 import { RoiExtractor, computeRoi, type NormalizedPoint } from '../lib/preprocess'
 import { PredictionSmoother } from '../lib/smoothing'
-import type { Box, ModelConfig, SmoothedResult } from '../lib/types'
+import type {
+  Box,
+  CameraErrorCode,
+  ModelConfig,
+  ModelErrorCode,
+  SmoothedResult,
+} from '../lib/types'
 import type { HandLandmarker } from '@mediapipe/tasks-vision'
 
 export type LoadStatus = 'loading' | 'ready' | 'error'
@@ -22,9 +28,9 @@ export type CameraStatus = 'idle' | 'requesting' | 'ready' | 'error'
 
 export interface PipelineState {
   modelStatus: LoadStatus
-  modelError: string | null
+  modelError: ModelErrorCode | null
   cameraStatus: CameraStatus
-  cameraError: string | null
+  cameraError: CameraErrorCode | null
   result: SmoothedResult
   fps: number
   handPresent: boolean
@@ -59,9 +65,9 @@ export function useGesturePipeline(
   settings: Settings,
 ): PipelineState {
   const [modelStatus, setModelStatus] = useState<LoadStatus>('loading')
-  const [modelError, setModelError] = useState<string | null>(null)
+  const [modelError, setModelError] = useState<ModelErrorCode | null>(null)
   const [cameraStatus, setCameraStatus] = useState<CameraStatus>('idle')
-  const [cameraError, setCameraError] = useState<string | null>(null)
+  const [cameraError, setCameraError] = useState<CameraErrorCode | null>(null)
   const [result, setResult] = useState<SmoothedResult>(EMPTY_RESULT)
   const [fps, setFps] = useState(0)
   const [handPresent, setHandPresent] = useState(false)
@@ -201,8 +207,9 @@ export function useGesturePipeline(
         setModelStatus('ready')
       } catch (err) {
         if (cancelled) return
+        console.warn('[gesture-lite] model load failed:', err)
         setModelStatus('error')
-        setModelError(friendlyModelError(err))
+        setModelError(classifyModelError(err))
       }
     })()
 
@@ -266,8 +273,9 @@ export function useGesturePipeline(
         rafRef.current = requestAnimationFrame(loop)
       } catch (err) {
         if (cancelled) return
+        console.warn('[gesture-lite] camera setup failed:', err)
         setCameraStatus('error')
-        setCameraError(friendlyCameraError(err))
+        setCameraError(classifyCameraError(err))
       }
     })()
 
@@ -341,40 +349,38 @@ function stopStream(stream: MediaStream): void {
   for (const track of stream.getTracks()) track.stop()
 }
 
-function friendlyCameraError(err: unknown): string {
+function classifyCameraError(err: unknown): CameraErrorCode {
   // Insecure origin (LAN over plain HTTP) is the most common blocker: the
   // browser hides navigator.mediaDevices, so getUserMedia is unreachable.
   if (typeof window !== 'undefined' && !window.isSecureContext) {
-    return '摄像头不可用：页面需运行在安全上下文（HTTPS 或 localhost）。当前多为局域网 HTTP，浏览器已隐藏摄像头接口。手机可用 adb reverse 端口转发后访问 localhost，或在浏览器 flags 中将该来源标记为安全。'
+    return 'insecure-context'
   }
-  const apiUnavailable =
+  if (
     (err instanceof Error && err.message === 'CAMERA_API_UNAVAILABLE') ||
     (err instanceof TypeError && /mediaDevices|getUserMedia/.test(err.message))
-  if (apiUnavailable) {
-    return '当前浏览器不支持摄像头采集（navigator.mediaDevices 不可用）。请使用较新的浏览器，并在 HTTPS 或 localhost 下访问。'
+  ) {
+    return 'api-unavailable'
   }
-
   const name = err instanceof DOMException ? err.name : ''
   switch (name) {
     case 'NotAllowedError':
     case 'SecurityError':
-      return '摄像头权限被拒绝。请在浏览器站点设置中允许摄像头访问后重试。'
+      return 'permission-denied'
     case 'NotFoundError':
     case 'OverconstrainedError':
-      return '未找到可用摄像头，或所选摄像头不支持。'
+      return 'not-found'
     case 'NotReadableError':
-      return '摄像头被其他应用占用，请关闭后重试。'
+      return 'in-use'
     default:
-      return `无法访问摄像头：${err instanceof Error ? err.message : String(err)}`
+      return 'unknown'
   }
 }
 
-function friendlyModelError(err: unknown): string {
+function classifyModelError(err: unknown): ModelErrorCode {
   const msg = err instanceof Error ? err.message : String(err)
-  if (/404|failed to fetch|not found|no available backend|protobuf|invalid|cannot|load/i.test(msg)) {
-    return '未能加载手势模型。请确认 public/models/gesture.onnx 存在且为有效 ONNX 文件，然后重试。'
-  }
-  return `模型加载失败：${msg}`
+  return /404|failed to fetch|not found|no available backend|protobuf|invalid|cannot|load/i.test(msg)
+    ? 'not-loaded'
+    : 'failed'
 }
 
 function drawOverlay(

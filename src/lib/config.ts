@@ -18,9 +18,6 @@ export const DEFAULT_MODEL_CONFIG: ModelConfig = {
 /** Synthetic label shown when no hand / no confident gesture is present. */
 export const NO_GESTURE_LABEL = 'no_gesture'
 
-/** Human-readable fallback text for {@link NO_GESTURE_LABEL}. */
-export const NO_GESTURE_TEXT = '未检测到手势'
-
 // ---- Asset URL helpers ----------------------------------------------------
 //
 // `import.meta.env.BASE_URL` is `./` for this project (see vite.config.ts), so

@@ -77,6 +77,18 @@ export interface SmoothedResult {
   top: Prediction[]
 }
 
+/** Stable, translatable camera-failure reasons surfaced by the pipeline. */
+export type CameraErrorCode =
+  | 'insecure-context'
+  | 'api-unavailable'
+  | 'permission-denied'
+  | 'not-found'
+  | 'in-use'
+  | 'unknown'
+
+/** Stable, translatable model-load failure reasons. */
+export type ModelErrorCode = 'not-loaded' | 'failed'
+
 // ---- Worker protocol ------------------------------------------------------
 
 export type WorkerRequest =

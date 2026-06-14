@@ -3,6 +3,8 @@ import { CameraView } from './components/CameraView'
 import { ResultPanel } from './components/ResultPanel'
 import { SettingsPanel } from './components/SettingsPanel'
 import { DEFAULT_SETTINGS, type Settings } from './lib/config'
+import { cn } from './lib/cn'
+import { useI18n, type Lang } from './lib/i18n'
 import { useGesturePipeline } from './hooks/useGesturePipeline'
 
 const SETTINGS_KEY = 'gesture-lite:settings'
@@ -21,6 +23,7 @@ export default function App() {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const overlayRef = useRef<HTMLCanvasElement | null>(null)
 
+  const { t, lang, setLang } = useI18n()
   const [settings, setSettings] = useState<Settings>(loadSettings)
   const webgpuAvailable = useMemo(() => typeof navigator !== 'undefined' && 'gpu' in navigator, [])
 
@@ -46,16 +49,24 @@ export default function App() {
           <h1 className="text-lg font-bold tracking-tight text-white sm:text-xl">
             Gesture<span className="text-accent">Lite</span>
           </h1>
-          <p className="text-xs text-white/40">浏览器端本地静态手势识别</p>
+          <p className="text-xs text-white/40">{t.subtitle}</p>
         </div>
-        <a
-          href="https://github.com/google-ai-edge/mediapipe"
-          target="_blank"
-          rel="noreferrer"
-          className="hidden text-xs text-white/30 transition hover:text-white/60 sm:block"
-        >
-          MediaPipe · onnxruntime-web
-        </a>
+        <div className="flex items-center gap-0.5 rounded-lg bg-ink-850/80 p-0.5 ring-1 ring-white/5">
+          {(['zh', 'en'] as const satisfies readonly Lang[]).map((l) => (
+            <button
+              key={l}
+              type="button"
+              aria-pressed={l === lang}
+              onClick={() => setLang(l)}
+              className={cn(
+                'rounded-md px-2.5 py-1 text-xs font-medium transition',
+                l === lang ? 'bg-accent text-ink-950' : 'text-white/55 hover:text-white',
+              )}
+            >
+              {l === 'zh' ? '中' : 'EN'}
+            </button>
+          ))}
+        </div>
       </header>
 
       <main className="flex flex-1 flex-col gap-4 lg:flex-row lg:items-stretch">
@@ -78,9 +89,7 @@ export default function App() {
         </aside>
       </main>
 
-      <footer className="mt-4 text-center text-xs text-white/25">
-        所有画面与推理均在本地完成，不会上传任何图像。
-      </footer>
+      <footer className="mt-4 text-center text-xs text-white/25">{t.footer}</footer>
     </div>
   )
 }

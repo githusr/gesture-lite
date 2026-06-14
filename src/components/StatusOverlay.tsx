@@ -1,8 +1,10 @@
+import { useI18n } from '../lib/i18n'
+import type { CameraErrorCode } from '../lib/types'
 import type { CameraStatus, LoadStatus } from '../hooks/useGesturePipeline'
 
 interface Props {
   cameraStatus: CameraStatus
-  cameraError: string | null
+  cameraError: CameraErrorCode | null
   modelStatus: LoadStatus
   onRetry: () => void
 }
@@ -28,6 +30,7 @@ function Spinner() {
  * by the result panel, since the camera + hand tracking still work without it.)
  */
 export function StatusOverlay({ cameraStatus, cameraError, modelStatus, onRetry }: Props) {
+  const { t } = useI18n()
   if (cameraStatus === 'ready') return null
 
   const requesting = cameraStatus === 'requesting' || cameraStatus === 'idle'
@@ -37,10 +40,8 @@ export function StatusOverlay({ cameraStatus, cameraError, modelStatus, onRetry 
       {requesting ? (
         <>
           <Spinner />
-          <p className="text-sm text-white/70">正在请求摄像头权限…</p>
-          {modelStatus === 'loading' && (
-            <p className="text-xs text-white/40">同时正在加载手势模型</p>
-          )}
+          <p className="text-sm text-white/70">{t.requestingCamera}</p>
+          {modelStatus === 'loading' && <p className="text-xs text-white/40">{t.alsoLoadingModel}</p>}
         </>
       ) : (
         <>
@@ -50,14 +51,14 @@ export function StatusOverlay({ cameraStatus, cameraError, modelStatus, onRetry 
             </svg>
           </div>
           <div className="max-w-xs space-y-1">
-            <p className="font-medium text-white">摄像头无法使用</p>
-            <p className="text-sm text-white/60">{cameraError}</p>
+            <p className="font-medium text-white">{t.cameraUnavailable}</p>
+            <p className="text-sm text-white/60">{cameraError && t.cameraError[cameraError]}</p>
           </div>
           <button
             onClick={onRetry}
             className="rounded-full bg-accent px-5 py-2 text-sm font-semibold text-ink-950 transition hover:brightness-110 active:scale-95"
           >
-            重试
+            {t.retry}
           </button>
         </>
       )}

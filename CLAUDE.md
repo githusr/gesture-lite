@@ -60,6 +60,13 @@ from `public/models/labels.json`.
 
 ## Non-obvious things to preserve
 
+- **UI copy is centralised** in `src/lib/i18n.tsx` (zh/en, auto-detected from
+  `navigator.language`, switchable in the header, persisted). Components read
+  strings via `useI18n().t` — never hardcode user-facing text; add new keys to the
+  `Messages` interface + both `zh`/`en` tables. The pipeline surfaces camera/model
+  failures as **codes** (`CameraErrorCode`/`ModelErrorCode`), translated at render
+  so switching language updates errors live. Gesture **labels are not translated**
+  (they come from the user's `labels.json`); only the synthetic `no_gesture` is.
 - **ONNX WASM loading:** the worker imports `onnxruntime-web` and does **not**
   set `ort.env.wasm.wasmPaths`. Vite emits the `.wasm` as a hashed asset and ORT
   resolves it via `import.meta.url`. Don't add a `wasmPaths` / static-copy for

@@ -1,5 +1,6 @@
 import { cn } from '../lib/cn'
 import { formatPercent, prettyLabel } from '../lib/format'
+import { useI18n } from '../lib/i18n'
 import type { Prediction } from '../lib/types'
 import type { PipelineState } from '../hooks/useGesturePipeline'
 
@@ -14,13 +15,14 @@ function StatusDot({ status }: { status: 'ready' | 'loading' | 'error' }) {
 }
 
 function PredictionRow({ pred, rank }: { pred: Prediction; rank: number }) {
+  const { t } = useI18n()
   return (
     <li className="space-y-1">
       <div className="flex items-baseline justify-between gap-2 text-sm">
         <span className="flex min-w-0 items-center gap-2">
           <span className="font-mono text-xs text-white/35">{rank}</span>
           <span className={cn('truncate', rank === 1 ? 'font-semibold text-white' : 'text-white/70')}>
-            {prettyLabel(pred.label)}
+            {prettyLabel(pred.label, t.noGesture)}
           </span>
         </span>
         <span className="shrink-0 font-mono text-xs text-white/60">{formatPercent(pred.score)}</span>
@@ -37,33 +39,34 @@ function PredictionRow({ pred, rank }: { pred: Prediction; rank: number }) {
 
 /** Detailed read-out: status chips, the committed gesture, and Top-K bars. */
 export function ResultPanel({ state }: Props) {
+  const { t } = useI18n()
   const { result, modelStatus, cameraStatus, labels, handPresent } = state
   const top = result.top.slice(0, 3)
 
   return (
     <section className="rounded-2xl bg-ink-850/80 p-4 ring-1 ring-white/5">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-white/80">识别结果</h2>
+        <h2 className="text-sm font-semibold text-white/80">{t.results}</h2>
         <div className="flex items-center gap-3 text-xs text-white/45">
           <span className="flex items-center gap-1.5">
             <StatusDot status={modelStatus} />
-            模型
+            {t.model}
           </span>
           <span className="flex items-center gap-1.5">
             <StatusDot status={cameraStatus === 'ready' ? 'ready' : cameraStatus === 'error' ? 'error' : 'loading'} />
-            摄像头
+            {t.camera}
           </span>
         </div>
       </div>
 
       <div className="mb-4 rounded-xl bg-ink-900/60 p-3">
-        <p className="text-xs text-white/40">{handPresent ? '已检测到手部' : '未检测到手部'}</p>
+        <p className="text-xs text-white/40">{handPresent ? t.handDetected : t.handNotDetected}</p>
         <p className={cn('mt-0.5 text-xl font-semibold', result.active ? 'text-accent' : 'text-white/45')}>
-          {prettyLabel(result.label)}
+          {prettyLabel(result.label, t.noGesture)}
         </p>
       </div>
 
-      <p className="mb-2 text-xs font-medium uppercase tracking-wide text-white/35">Top 3</p>
+      <p className="mb-2 text-xs font-medium uppercase tracking-wide text-white/35">{t.top3}</p>
       {top.length > 0 ? (
         <ol className="space-y-2.5">
           {top.map((pred, i) => (
@@ -72,12 +75,12 @@ export function ResultPanel({ state }: Props) {
         </ol>
       ) : (
         <p className="py-3 text-center text-sm text-white/35">
-          {modelStatus === 'ready' ? '将手放入画面以开始识别' : '等待模型与摄像头就绪…'}
+          {modelStatus === 'ready' ? t.placeholderReady : t.placeholderWaiting}
         </p>
       )}
 
       <p className="mt-4 text-right text-xs text-white/30">
-        {labels.length > 0 ? `${labels.length} 个类别` : '未加载类别表'}
+        {labels.length > 0 ? t.classesCount(labels.length) : t.noLabels}
       </p>
     </section>
   )

@@ -1,5 +1,6 @@
 import { cn } from '../lib/cn'
 import { formatPercent, prettyLabel } from '../lib/format'
+import { useI18n } from '../lib/i18n'
 import type { PipelineState } from '../hooks/useGesturePipeline'
 import { StatusOverlay } from './StatusOverlay'
 
@@ -17,6 +18,7 @@ interface Props {
  * so the overlay (drawn in raw video coordinates) stays perfectly aligned.
  */
 export function CameraView({ videoRef, overlayRef, mirror, state }: Props) {
+  const { t } = useI18n()
   const { result, fps, modelStatus, modelError, cameraStatus, cameraError, retry } = state
 
   return (
@@ -45,7 +47,7 @@ export function CameraView({ videoRef, overlayRef, mirror, state }: Props) {
           <svg className="h-3.5 w-3.5 text-good" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
           </svg>
-          本地推理 · 不上传
+          {t.privacy}
         </span>
       </div>
 
@@ -60,7 +62,7 @@ export function CameraView({ videoRef, overlayRef, mirror, state }: Props) {
                 : 'bg-ink-950/70 text-white/70',
             )}
           >
-            {modelStatus === 'error' ? modelError : '手势模型加载中…'}
+            {modelStatus === 'error' && modelError ? t.modelError[modelError] : t.modelLoading}
           </div>
         </div>
       )}
@@ -70,14 +72,16 @@ export function CameraView({ videoRef, overlayRef, mirror, state }: Props) {
         <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink-950/90 to-transparent p-4 pt-10">
           <div className="flex items-end justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-xs font-medium uppercase tracking-wide text-white/40">当前手势</p>
+              <p className="text-xs font-medium uppercase tracking-wide text-white/40">
+                {t.currentGesture}
+              </p>
               <p
                 className={cn(
                   'truncate text-2xl font-semibold sm:text-3xl',
                   result.active ? 'text-white' : 'text-white/45',
                 )}
               >
-                {prettyLabel(result.label)}
+                {prettyLabel(result.label, t.noGesture)}
               </p>
             </div>
             {result.active && (
