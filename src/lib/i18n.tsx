@@ -17,8 +17,6 @@ export interface Messages {
   handDetected: string
   handNotDetected: string
   top3: string
-  placeholderReady: string
-  placeholderWaiting: string
   classesCount: (n: number) => string
   noLabels: string
   settings: string
@@ -51,8 +49,6 @@ const zh: Messages = {
   handDetected: '已检测到手部',
   handNotDetected: '未检测到手部',
   top3: 'Top 3',
-  placeholderReady: '将手放入画面以开始识别',
-  placeholderWaiting: '等待模型与摄像头就绪…',
   classesCount: (n) => `${n} 个类别`,
   noLabels: '未加载类别表',
   settings: '设置',
@@ -99,8 +95,6 @@ const en: Messages = {
   handDetected: 'Hand detected',
   handNotDetected: 'No hand detected',
   top3: 'Top 3',
-  placeholderReady: 'Put your hand in frame to start',
-  placeholderWaiting: 'Waiting for model and camera…',
   classesCount: (n) => `${n} ${n === 1 ? 'class' : 'classes'}`,
   noLabels: 'No labels loaded',
   settings: 'Settings',

@@ -1,4 +1,5 @@
 import { cn } from '../lib/cn'
+import { TOP_K } from '../lib/config'
 import { formatPercent, prettyLabel } from '../lib/format'
 import { useI18n } from '../lib/i18n'
 import type { Prediction } from '../lib/types'
@@ -37,11 +38,27 @@ function PredictionRow({ pred, rank }: { pred: Prediction; rank: number }) {
   )
 }
 
+/** Placeholder row matching {@link PredictionRow}'s height, so the panel keeps a
+ * constant height whether or not a hand is being classified (no layout shift). */
+function EmptyRow({ rank }: { rank: number }) {
+  return (
+    <li className="space-y-1">
+      <div className="flex items-baseline justify-between gap-2 text-sm">
+        <span className="flex min-w-0 items-center gap-2">
+          <span className="font-mono text-xs text-white/25">{rank}</span>
+          <span className="text-white/20">—</span>
+        </span>
+        <span className="shrink-0 font-mono text-xs text-white/20">—</span>
+      </div>
+      <div className="h-1.5 rounded-full bg-ink-700/60" />
+    </li>
+  )
+}
+
 /** Detailed read-out: status chips, the committed gesture, and Top-K bars. */
 export function ResultPanel({ state }: Props) {
   const { t } = useI18n()
   const { result, modelStatus, cameraStatus, labels, handPresent } = state
-  const top = result.top.slice(0, 3)
 
   return (
     <section className="rounded-2xl bg-ink-850/80 p-4 ring-1 ring-white/5">
@@ -61,23 +78,27 @@ export function ResultPanel({ state }: Props) {
 
       <div className="mb-4 rounded-xl bg-ink-900/60 p-3">
         <p className="text-xs text-white/40">{handPresent ? t.handDetected : t.handNotDetected}</p>
-        <p className={cn('mt-0.5 text-xl font-semibold', result.active ? 'text-accent' : 'text-white/45')}>
+        <p
+          className={cn(
+            'mt-0.5 truncate text-xl font-semibold',
+            result.active ? 'text-accent' : 'text-white/45',
+          )}
+        >
           {prettyLabel(result.label, t.noGesture)}
         </p>
       </div>
 
       <p className="mb-2 text-xs font-medium uppercase tracking-wide text-white/35">{t.top3}</p>
-      {top.length > 0 ? (
-        <ol className="space-y-2.5">
-          {top.map((pred, i) => (
-            <PredictionRow key={pred.index} pred={pred} rank={i + 1} />
-          ))}
-        </ol>
-      ) : (
-        <p className="py-3 text-center text-sm text-white/35">
-          {modelStatus === 'ready' ? t.placeholderReady : t.placeholderWaiting}
-        </p>
-      )}
+      <ol className="space-y-2.5">
+        {Array.from({ length: TOP_K }, (_, i) => {
+          const pred = result.top[i]
+          return pred ? (
+            <PredictionRow key={i} pred={pred} rank={i + 1} />
+          ) : (
+            <EmptyRow key={i} rank={i + 1} />
+          )
+        })}
+      </ol>
 
       <p className="mt-4 text-right text-xs text-white/30">
         {labels.length > 0 ? t.classesCount(labels.length) : t.noLabels}
