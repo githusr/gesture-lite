@@ -156,12 +156,15 @@ export function SettingsPanel({ settings, onChange }: Props) {
           <div className="space-y-3 border-t border-line pt-4">
             <Slider
               label={t.detectionSensitivity}
-              value={settings.detectionConfidence}
+              // Presented as "sensitivity" (higher = easier to detect). The stored
+              // value is the raw minHandDetectionConfidence, where higher = stricter,
+              // so the slider shows/sets its inverse over the same [0.1, 0.9] range.
+              value={Number((1 - settings.detectionConfidence).toFixed(2))}
               min={0.1}
               max={0.9}
               step={0.05}
-              display={settings.detectionConfidence.toFixed(2)}
-              onChange={(v) => onChange({ detectionConfidence: v })}
+              display={(1 - settings.detectionConfidence).toFixed(2)}
+              onChange={(v) => onChange({ detectionConfidence: Number((1 - v).toFixed(2)) })}
             />
             <Slider
               label={t.smoothingWindow}
