@@ -60,7 +60,7 @@ export const DEFAULT_SETTINGS: Settings = {
   facingMode: 'user',
   detectionConfidence: 0.5,
   smoothingWindow: 8,
-  scoreThreshold: 0.55,
+  scoreThreshold: 0.75,
   presenceRatio: 0.4,
   showLandmarks: false,
   mirror: true,
