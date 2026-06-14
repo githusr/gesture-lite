@@ -62,7 +62,7 @@ export const DEFAULT_SETTINGS: Settings = {
   smoothingWindow: 8,
   scoreThreshold: 0.55,
   presenceRatio: 0.4,
-  showLandmarks: true,
+  showLandmarks: false,
   mirror: true,
 }
 
