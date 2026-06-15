@@ -1,8 +1,10 @@
 import { useEffect } from 'react'
 import { cn } from '../lib/cn'
 import { prettyLabel } from '../lib/format'
+import { GESTURE_POSES } from '../lib/gesturePoses'
 import { useI18n } from '../lib/i18n'
 import type { GestureMeta } from '../lib/types'
+import { HandPose } from './HandPose'
 
 interface Props {
   open: boolean
@@ -91,6 +93,7 @@ export function GestureGuide({ open, onClose, labels, meta, currentLabel }: Prop
           <ol className="grid grid-cols-2 gap-2 overflow-y-auto p-4 sm:grid-cols-3">
             {labels.map((label) => {
               const info = meta[label]
+              const pose = GESTURE_POSES[label]
               const active = label === currentLabel && currentLabel !== ''
               return (
                 <li
@@ -101,8 +104,14 @@ export function GestureGuide({ open, onClose, labels, meta, currentLabel }: Prop
                   )}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center text-2xl leading-none">
-                      {info?.emoji ?? <HandGlyph />}
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center">
+                      {info?.emoji ? (
+                        <span className="text-2xl leading-none">{info.emoji}</span>
+                      ) : pose ? (
+                        <HandPose spec={pose} className="h-6 w-6 text-amber-300" />
+                      ) : (
+                        <HandGlyph />
+                      )}
                     </span>
                     <span className="truncate text-sm font-medium text-white">
                       {prettyLabel(label, t.noGesture)}
