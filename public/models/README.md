@@ -8,11 +8,27 @@ fetched by the browser at runtime and used for fully local inference.
 | `gesture.onnx`         | ✅ yes   | Your static gesture classifier, exported to ONNX.                     |
 | `labels.json`          | ✅ yes   | Class names, **index-aligned** to the model output.                   |
 | `model.config.json`    | optional | Preprocessing contract (see below). Falls back to ImageNet defaults.  |
+| `gestures.meta.json`   | optional | Per-gesture emoji + zh/en descriptions shown in the in-app guide.     |
 | `hand_landmarker.task` | ✅ yes   | MediaPipe Hand Landmarker model. Run `pnpm fetch:landmarker` to get it. |
 
-> All four files are committed to the repo (the model is finalized), so a fresh
-> clone runs as-is. If you swap in a much larger / frequently-changing model,
-> consider Git LFS or ignoring the weights again to keep the history lean.
+> The committed files (the model is finalized) let a fresh clone run as-is. If
+> you swap in a much larger / frequently-changing model, consider Git LFS or
+> ignoring the weights again to keep the history lean.
+
+## `gestures.meta.json` (optional)
+
+Display metadata for the in-app gesture guide, keyed by label. Any field or
+label may be omitted — missing entries fall back to the prettified label name.
+
+```json
+{
+  "like": { "emoji": "👍", "zh": "拇指向上（点赞）", "en": "Thumb up (like)" },
+  "four": { "zh": "四指伸直、拇指收起（数字 4）", "en": "Four fingers up, thumb folded" }
+}
+```
+
+`emoji` is optional (a neutral hand glyph is shown otherwise); `zh`/`en` are the
+short how-to descriptions for each language.
 
 ## `labels.json`
 

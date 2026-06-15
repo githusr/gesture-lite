@@ -35,6 +35,7 @@ export const paths = {
   model: () => asset('models/gesture.onnx'),
   labels: () => asset('models/labels.json'),
   modelConfig: () => asset('models/model.config.json'),
+  gestureMeta: () => asset('models/gestures.meta.json'),
   handLandmarker: () => asset('models/hand_landmarker.task'),
   /** Directory FilesetResolver loads the MediaPipe vision WASM from. */
   mediapipeWasm: () => asset('wasm/mediapipe'),

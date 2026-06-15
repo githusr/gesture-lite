@@ -17,6 +17,7 @@ import { PredictionSmoother } from '../lib/smoothing'
 import type {
   Box,
   CameraErrorCode,
+  GestureMeta,
   ModelConfig,
   ModelErrorCode,
   SmoothedResult,
@@ -35,6 +36,7 @@ export interface PipelineState {
   fps: number
   handPresent: boolean
   labels: string[]
+  gestureMeta: GestureMeta
   retry: () => void
 }
 
@@ -72,6 +74,7 @@ export function useGesturePipeline(
   const [fps, setFps] = useState(0)
   const [handPresent, setHandPresent] = useState(false)
   const [labels, setLabels] = useState<string[]>([])
+  const [gestureMeta, setGestureMeta] = useState<GestureMeta>({})
   const [retryTick, setRetryTick] = useState(0)
 
   // --- long-lived singletons (survive re-renders) ---
@@ -193,10 +196,12 @@ export function useGesturePipeline(
     void (async () => {
       const cfg = await loadModelConfig()
       const labelList = await loadLabels()
+      const meta = await loadGestureMeta()
       if (cancelled) return
 
       modelConfigRef.current = cfg
       setLabels(labelList)
+      setGestureMeta(meta)
       smootherRef.current.labels = labelList
       extractorRef.current = new RoiExtractor(cfg.inputSize)
 
@@ -331,6 +336,7 @@ export function useGesturePipeline(
     fps,
     handPresent,
     labels,
+    gestureMeta,
     retry,
   }
 }
@@ -363,6 +369,17 @@ async function loadModelConfig(): Promise<ModelConfig> {
     return { ...DEFAULT_MODEL_CONFIG, ...partial }
   } catch {
     return DEFAULT_MODEL_CONFIG
+  }
+}
+
+async function loadGestureMeta(): Promise<GestureMeta> {
+  try {
+    const res = await fetch(paths.gestureMeta())
+    if (!res.ok) return {}
+    const data: unknown = await res.json()
+    return data && typeof data === 'object' ? (data as GestureMeta) : {}
+  } catch {
+    return {}
   }
 }
 

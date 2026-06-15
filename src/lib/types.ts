@@ -75,6 +75,15 @@ export interface SmoothedResult {
   top: Prediction[]
 }
 
+/** Optional per-gesture display metadata, keyed by label in gestures.meta.json. */
+export interface GestureInfo {
+  emoji?: string
+  zh: string
+  en: string
+}
+
+export type GestureMeta = Record<string, GestureInfo>
+
 /** Stable, translatable camera-failure reasons surfaced by the pipeline. */
 export type CameraErrorCode =
   | 'insecure-context'

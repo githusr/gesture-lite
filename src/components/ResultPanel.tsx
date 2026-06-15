@@ -57,8 +57,9 @@ function EmptyRow({ rank }: { rank: number }) {
 
 /** Detailed read-out: status chips, the committed gesture, and Top-K bars. */
 export function ResultPanel({ state }: Props) {
-  const { t } = useI18n()
-  const { result, modelStatus, cameraStatus, labels, handPresent } = state
+  const { t, lang } = useI18n()
+  const { result, modelStatus, cameraStatus, labels, handPresent, gestureMeta } = state
+  const info = gestureMeta[result.label]
 
   return (
     <section className="rounded-2xl bg-ink-850/80 p-4 ring-1 ring-white/5">
@@ -80,12 +81,18 @@ export function ResultPanel({ state }: Props) {
         <p className="text-xs text-white/40">{handPresent ? t.handDetected : t.handNotDetected}</p>
         <p
           className={cn(
-            'mt-0.5 truncate text-xl font-semibold',
+            'mt-0.5 flex items-center gap-2 text-xl font-semibold',
             result.active ? 'text-accent' : 'text-white/45',
           )}
         >
-          {prettyLabel(result.label, t.noGesture)}
+          {result.active && info?.emoji && (
+            <span className="shrink-0 text-2xl leading-none">{info.emoji}</span>
+          )}
+          <span className="truncate">{prettyLabel(result.label, t.noGesture)}</span>
         </p>
+        {result.active && info && (
+          <p className="mt-1 text-xs leading-relaxed text-white/45">{info[lang]}</p>
+        )}
       </div>
 
       <p className="mb-2 text-xs font-medium uppercase tracking-wide text-white/35">{t.top3}</p>

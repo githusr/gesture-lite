@@ -1,0 +1,20 @@
+{
+  "call": { "emoji": "🤙", "zh": "伸出拇指和小指（打电话手势）", "en": "Thumb and pinky out (call me)" },
+  "dislike": { "emoji": "👎", "zh": "拇指向下（差评）", "en": "Thumb pointing down" },
+  "fist": { "emoji": "✊", "zh": "握紧拳头", "en": "Closed fist" },
+  "four": { "zh": "四指伸直、拇指收起（数字 4）", "en": "Four fingers up, thumb folded" },
+  "like": { "emoji": "👍", "zh": "拇指向上（点赞）", "en": "Thumb up (like)" },
+  "mute": { "emoji": "🤫", "zh": "竖起食指置于唇前（噤声）", "en": "Index finger at the lips (shush)" },
+  "ok": { "emoji": "👌", "zh": "拇指与食指捏成圈，其余伸直", "en": "Thumb and index form a circle (OK)" },
+  "one": { "emoji": "☝️", "zh": "只伸出食指（数字 1）", "en": "Index finger up (one)" },
+  "palm": { "emoji": "🖐️", "zh": "五指张开、掌心朝镜头", "en": "Open hand, fingers spread, palm to camera" },
+  "peace": { "emoji": "✌️", "zh": "食指中指张成 V 字，掌心朝镜头", "en": "Index and middle in a V, palm to camera" },
+  "peace_inverted": { "zh": "V 字手势，手背朝镜头（掌心朝外）", "en": "V sign with the back of the hand to camera" },
+  "rock": { "emoji": "🤘", "zh": "伸出食指和小指（摇滚角）", "en": "Index and pinky out (rock horns)" },
+  "stop": { "emoji": "✋", "zh": "五指并拢、掌心朝前（停）", "en": "Open palm forward, fingers together (stop)" },
+  "stop_inverted": { "zh": "停手势倒置，指尖朝下", "en": "Stop gesture inverted, fingers pointing down" },
+  "three": { "zh": "伸食指、中指、无名指（数字 3）", "en": "Index, middle and ring up (three)" },
+  "three2": { "zh": "伸拇指、食指、中指（另一种 3）", "en": "Thumb, index and middle up (alt. three)" },
+  "two_up": { "zh": "食指与中指并拢竖起（两指朝上）", "en": "Index and middle up together (two up)" },
+  "two_up_inverted": { "zh": "食指中指并拢朝下（two up 倒置）", "en": "Index and middle pointing down (two up inverted)" }
+}

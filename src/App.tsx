@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { CameraView } from './components/CameraView'
+import { GestureGuide } from './components/GestureGuide'
 import { ResultPanel } from './components/ResultPanel'
 import { SettingsPanel } from './components/SettingsPanel'
 import { DEFAULT_SETTINGS, type Settings } from './lib/config'
@@ -25,6 +26,7 @@ export default function App() {
 
   const { t, lang, setLang } = useI18n()
   const [settings, setSettings] = useState<Settings>(loadSettings)
+  const [guideOpen, setGuideOpen] = useState(false)
 
   useEffect(() => {
     try {
@@ -50,21 +52,36 @@ export default function App() {
           </h1>
           <p className="text-xs text-white/40">{t.subtitle}</p>
         </div>
-        <div className="flex items-center gap-0.5 rounded-lg bg-ink-850/80 p-0.5 ring-1 ring-white/5">
-          {(['zh', 'en'] as const satisfies readonly Lang[]).map((l) => (
-            <button
-              key={l}
-              type="button"
-              aria-pressed={l === lang}
-              onClick={() => setLang(l)}
-              className={cn(
-                'rounded-md px-2.5 py-1 text-xs font-medium transition',
-                l === lang ? 'bg-accent text-ink-950' : 'text-white/55 hover:text-white',
-              )}
-            >
-              {l === 'zh' ? '中' : 'EN'}
-            </button>
-          ))}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setGuideOpen(true)}
+            aria-label={t.guideOpen}
+            title={t.guideOpen}
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-ink-850/80 text-white/55 ring-1 ring-white/5 transition hover:text-white"
+          >
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="9.5" />
+              <path d="M9.3 9.2a2.8 2.8 0 0 1 5.3 1c0 1.9-2.6 2.4-2.6 2.4" />
+              <path d="M12 17h.01" />
+            </svg>
+          </button>
+          <div className="flex items-center gap-0.5 rounded-lg bg-ink-850/80 p-0.5 ring-1 ring-white/5">
+            {(['zh', 'en'] as const satisfies readonly Lang[]).map((l) => (
+              <button
+                key={l}
+                type="button"
+                aria-pressed={l === lang}
+                onClick={() => setLang(l)}
+                className={cn(
+                  'rounded-md px-2.5 py-1 text-xs font-medium transition',
+                  l === lang ? 'bg-accent text-ink-950' : 'text-white/55 hover:text-white',
+                )}
+              >
+                {l === 'zh' ? '中' : 'EN'}
+              </button>
+            ))}
+          </div>
         </div>
       </header>
 
@@ -85,6 +102,14 @@ export default function App() {
       </main>
 
       <footer className="mt-4 text-center text-xs text-white/25">{t.footer}</footer>
+
+      <GestureGuide
+        open={guideOpen}
+        onClose={() => setGuideOpen(false)}
+        labels={state.labels}
+        meta={state.gestureMeta}
+        currentLabel={state.result.active ? state.result.label : ''}
+      />
     </div>
   )
 }

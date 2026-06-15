@@ -19,6 +19,10 @@ export interface Messages {
   top3: string
   classesCount: (n: number) => string
   noLabels: string
+  guideTitle: string
+  guideSubtitle: string
+  guideOpen: string
+  guideClose: string
   settings: string
   front: string
   back: string
@@ -51,6 +55,10 @@ const zh: Messages = {
   top3: 'Top 3',
   classesCount: (n) => `${n} 个类别`,
   noLabels: '未加载类别表',
+  guideTitle: '手势参考',
+  guideSubtitle: '本模型可识别的手势',
+  guideOpen: '手势参考',
+  guideClose: '关闭',
   settings: '设置',
   front: '前置',
   back: '后置',
@@ -97,6 +105,10 @@ const en: Messages = {
   top3: 'Top 3',
   classesCount: (n) => `${n} ${n === 1 ? 'class' : 'classes'}`,
   noLabels: 'No labels loaded',
+  guideTitle: 'Gesture guide',
+  guideSubtitle: 'Gestures this model recognises',
+  guideOpen: 'Gesture guide',
+  guideClose: 'Close',
   settings: 'Settings',
   front: 'Front',
   back: 'Back',
