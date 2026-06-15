@@ -1,4 +1,4 @@
-import * as ort from 'onnxruntime-web'
+import * as ort from 'onnxruntime-web/wasm'
 import { imageDataToTensor, softmax } from '../lib/preprocess'
 import type { ModelConfig, WorkerRequest, WorkerResponse } from '../lib/types'
 
