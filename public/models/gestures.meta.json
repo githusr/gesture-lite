@@ -9,12 +9,12 @@
   "one": { "emoji": "☝️", "zh": "只伸出食指（数字 1）", "en": "Index finger up (one)" },
   "palm": { "emoji": "🖐️", "zh": "五指张开、掌心朝镜头", "en": "Open hand, fingers spread, palm to camera" },
   "peace": { "emoji": "✌️", "zh": "食指中指张成 V 字，掌心朝镜头", "en": "Index and middle in a V, palm to camera" },
-  "peace_inverted": { "zh": "V 字手势，手背朝镜头（掌心朝外）", "en": "V sign with the back of the hand to camera" },
+  "peace_inverted": { "zh": "V 字手势，手背朝镜头", "en": "V sign with the back of the hand to camera" },
   "rock": { "emoji": "🤘", "zh": "伸出食指和小指（摇滚角）", "en": "Index and pinky out (rock horns)" },
-  "stop": { "emoji": "✋", "zh": "五指并拢、掌心朝前（停）", "en": "Open palm forward, fingers together (stop)" },
-  "stop_inverted": { "zh": "五指并拢、手背朝镜头（掌心朝外）", "en": "Flat hand, fingers together, back of the hand to camera" },
+  "stop": { "emoji": "✋", "zh": "五指并拢、掌心朝前（停）", "en": "Open palm forward, fingers together" },
+  "stop_inverted": { "zh": "五指并拢、手背朝镜头", "en": "Flat hand, fingers together, back of the hand to camera" },
   "three": { "zh": "伸食指、中指、无名指（数字 3）", "en": "Index, middle and ring up (three)" },
   "three2": { "zh": "伸拇指、食指、中指（另一种 3）", "en": "Thumb, index and middle up (alt. three)" },
-  "two_up": { "zh": "食指与中指并拢竖起（两指朝上）", "en": "Index and middle up together (two up)" },
-  "two_up_inverted": { "zh": "食指中指并拢竖起、手背朝镜头（two up 倒置）", "en": "Index and middle up together, back of the hand to camera" }
+  "two_up": { "zh": "食指与中指并拢竖起（两指朝上）", "en": "Index and middle up together" },
+  "two_up_inverted": { "zh": "食指中指并拢竖起、手背朝镜头", "en": "Index and middle up together, back of the hand to camera" }
 }
