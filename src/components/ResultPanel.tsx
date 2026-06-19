@@ -1,9 +1,11 @@
 import { cn } from '../lib/cn'
 import { TOP_K } from '../lib/config'
 import { formatPercent, prettyLabel } from '../lib/format'
+import { GESTURE_POSES } from '../lib/gesturePoses'
 import { useI18n } from '../lib/i18n'
 import type { Prediction } from '../lib/types'
 import type { PipelineState } from '../hooks/useGesturePipeline'
+import { HandPose } from './HandPose'
 
 interface Props {
   state: PipelineState
@@ -60,6 +62,7 @@ export function ResultPanel({ state }: Props) {
   const { t, lang } = useI18n()
   const { result, modelStatus, cameraStatus, labels, handPresent, gestureMeta } = state
   const info = gestureMeta[result.label]
+  const pose = GESTURE_POSES[result.label]
 
   return (
     <section className="rounded-2xl bg-ink-850/80 p-4 ring-1 ring-white/5">
@@ -85,9 +88,12 @@ export function ResultPanel({ state }: Props) {
             result.active ? 'text-accent' : 'text-white/45',
           )}
         >
-          {result.active && info?.emoji && (
-            <span className="shrink-0 text-2xl leading-none">{info.emoji}</span>
-          )}
+          {result.active &&
+            (info?.emoji ? (
+              <span className="shrink-0 text-2xl leading-none">{info.emoji}</span>
+            ) : pose ? (
+              <HandPose spec={pose} className="h-6 w-6 shrink-0 text-amber-300" />
+            ) : null)}
           <span className="truncate">{prettyLabel(result.label, t.noGesture)}</span>
         </p>
         {result.active && info && (
